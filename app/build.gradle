@@ -1,9 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        HumansOfNewYorkKey {
+            keyAlias 'HumansOfNewYork'
+            keyPassword 'Aj55639501'
+            storePassword 'Aj55639501'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
-
     defaultConfig {
         applicationId "com.ajanthan.webscrappertest"
         minSdkVersion 16
@@ -15,6 +21,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.HumansOfNewYorkKey
         }
     }
 }
@@ -24,9 +31,9 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
-    compile "org.jsoup:jsoup:1.8.1"
+    compile 'org.jsoup:jsoup:1.8.1'
     compile 'com.android.support:cardview-v7:21.0.+'
     compile 'com.android.support:recyclerview-v7:21.0.+'
     compile 'com.google.code.gson:gson:2.4'
-
+    compile 'com.squareup.picasso:picasso:2.3.3'
 }

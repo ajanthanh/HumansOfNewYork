@@ -1,51 +1,51 @@
 package com.ajanthan.webscrappertest;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
-import java.io.IOException;
-import java.io.InputStream;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by ajanthan on 16-02-03.
  */
-public class ArticleDetail extends Activity implements OnImageDownloadCompleted {
+public class ArticleDetail extends AppCompatActivity {
 
     private static String articleKey = "article";
 
+    private TextView tvTitle;
+    private TextView tvDate;
     private TextView tvBody;
-    private ImageView ivImg;
+    private ImageView ivImage;
 
-    private ArticleExtended article;
+    private Article article;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.article_detail);
 
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.actionbar_article);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        tvTitle = (TextView) findViewById(R.id.title);
+        tvDate = (TextView) findViewById(R.id.date);
         tvBody = (TextView) findViewById(R.id.body);
-        ivImg = (ImageView) findViewById(R.id.img);
+        ivImage = (ImageView) findViewById(R.id.img);
 
-        Bitmap defaultImg = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-        article = new ArticleExtended((Article) getIntent().getSerializableExtra(articleKey),defaultImg);
+        article = (Article)getIntent().getSerializableExtra(articleKey);
+        tvTitle.setText(article.getBody());
+        tvDate.setText(article.getDate()+" | Humans Of New York");
         tvBody.setText(article.getBody());
-        ivImg.setImageBitmap(article.getImg());
-        new DownloadArticleImage(article.getImgUrl(),this,0).execute();
-    }
-
-    @Override
-    public void onTaskCompleted(Bitmap img, int position) {
-        ivImg.setImageBitmap(img);
-        Log.e("CallBack", "completed");
+        Picasso.with(this)
+                .load(article.getImgUrl())
+                .into(ivImage);
     }
 }

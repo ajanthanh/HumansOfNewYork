@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Created by ajanthan on 16-02-02.
  */
-public class Article implements Serializable,ArticleBase {
+public class Article implements Serializable {
     private String title;
     private String date;
     private String body;

@@ -16,17 +16,16 @@ import java.util.ArrayList;
 /**
  * Created by ajanthan on 16-02-02.
  */
-public class RequestArticle extends AsyncTask<Void, Void, ArrayList<Article>> {
+public class WebScrapperRequestArticle extends AsyncTask<Void, Void, ArrayList<Article>> {
     private ArrayList<Article> articles = new ArrayList<Article>();
     private ArticleRecyclerViewAdapter articleRecyclerViewAdapter;
     private String url;
     private OnArticleScrapCompleted listener;
 
-    public RequestArticle(ArticleRecyclerViewAdapter articleRecyclerViewAdapter, String url,OnArticleScrapCompleted listener){
+    public WebScrapperRequestArticle(ArticleRecyclerViewAdapter articleRecyclerViewAdapter, String url, OnArticleScrapCompleted listener){
         this.articleRecyclerViewAdapter = articleRecyclerViewAdapter;
         this.url=url;
         this.listener=listener;
-        Log.e("RequestedPages",url);
     }
 
     @Override

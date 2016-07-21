@@ -3,46 +3,34 @@ package com.ajanthan.webscrappertest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.CountDownTimer;
-import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
  * Created by ajanthan on 15-11-26.
  */
-public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecyclerViewAdapter.ArticleViewHolder> implements OnImageDownloadCompleted {
+public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecyclerViewAdapter.ArticleViewHolder> {
 
     private LayoutInflater mInflate;
-    private ArrayList<ArticleExtended> articles = new ArrayList<ArticleExtended>();
+    private ArrayList<Article> articles = new ArrayList<Article>();
     private Context mContext;
-    private CountDownTimer alarmToneTimer;
     private int current_postion;
 
 
     public ArticleRecyclerViewAdapter(Context context, ArrayList<Article> articles) {
         mInflate = LayoutInflater.from(context);
-        if (articles == null) {
-            this.articles = new ArrayList<ArticleExtended>();     //TODO handle null articles
-        } else {
-            Bitmap defaultImg = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
-            for(int i=0;i<articles.size();i++){
-                this.articles.add(new ArticleExtended(articles.get(i),defaultImg));
-                new DownloadArticleImage(articles.get(i).getImgUrl(),this,i).execute();
-            }
+
+        if(articles!=null){
+            this.articles=articles;
         }
         mContext = context;
     }
@@ -58,7 +46,9 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
     public void onBindViewHolder(ArticleViewHolder holder, int position) {
         holder.tvArticleDescription.setText(articles.get(position).getBody());
         holder.tvDate.setText(articles.get(position).getDate());
-        holder.ivImage.setImageBitmap(articles.get(position).getImg());
+        Picasso.with(mContext)
+                .load(articles.get(position).getImgUrl())
+                .into(holder.ivImage);
         current_postion = position;
     }
 
@@ -73,11 +63,7 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
     }
 
     public void update(ArrayList<Article> addedArticles) {
-        for(int i=0;i<addedArticles.size();i++){
-            Bitmap defaultImg = BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.ic_launcher);
-            articles.add(new ArticleExtended(addedArticles.get(i),defaultImg));
-            new DownloadArticleImage(articles.get(articles.size()-1).getImgUrl(),this,articles.size()-1).execute();
-        }
+        articles.addAll(addedArticles);
         notifyDataSetChanged();
     }
 
@@ -85,11 +71,8 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
         return current_postion;
     }
 
-    @Override
-    public void onTaskCompleted(Bitmap img, int position) {
-        articles.get(position).setImg(img);
-        Log.e("CallBack", String.valueOf(position));
-        notifyDataSetChanged();
+    public ArrayList<Article> getArticles(){
+        return articles;
     }
 
     class ArticleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -113,7 +96,7 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
         @Override
         public void onClick(View v) {
             Intent i = new Intent(context, ArticleDetail.class);
-            i.putExtra("article", articles.get(this.getPosition()).getArticle());
+            i.putExtra("article", articles.get(this.getLayoutPosition()));
             context.startActivity(i);
         }
     }
