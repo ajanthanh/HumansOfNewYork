@@ -81,6 +81,10 @@ public class JsonRequestArticle extends AsyncTask<Void, Void, ArrayList<Article>
         body = body.replace("<br>","");
         body = body.replace("</br>","");
         body = body.replace("<br/>","");
+
+        body = body.replace("&ldquo;","\"");
+        body = body.replace("&rdquo;","\"");
+        body = body.replace("&rsquo;","'");
         body = body.trim();
         Log.e("pokemon",body.charAt(0)+"");
         return body;
