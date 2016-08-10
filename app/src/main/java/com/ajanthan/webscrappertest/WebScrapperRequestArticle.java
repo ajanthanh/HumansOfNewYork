@@ -62,7 +62,8 @@ public class WebScrapperRequestArticle extends AsyncTask<Void, Void, ArrayList<A
     @Override
     protected void onPostExecute(ArrayList<Article> articles) {
         super.onPostExecute(articles);
-        articleRecyclerViewAdapter.update(articles);
+        ArticlesModel.getInstance().addArticles(articles);
+        articleRecyclerViewAdapter.update();
         listener.onTaskCompleted();
     }
 }

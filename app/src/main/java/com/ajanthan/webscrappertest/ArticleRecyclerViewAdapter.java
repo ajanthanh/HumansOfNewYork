@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.CountDownTimer;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,18 +23,18 @@ import java.util.ArrayList;
 public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecyclerViewAdapter.ArticleViewHolder> {
 
     private LayoutInflater mInflate;
-    private ArrayList<Article> articles = new ArrayList<Article>();
+    private ArticlesModel articlesModel;
+    private ArrayList<Article> articles;
     private Context mContext;
     private int current_postion;
 
 
-    public ArticleRecyclerViewAdapter(Context context, ArrayList<Article> articles) {
+    public ArticleRecyclerViewAdapter(Context context) {
         mInflate = LayoutInflater.from(context);
-
-        if(articles!=null){
-            this.articles=articles;
-        }
+        articlesModel = ArticlesModel.getInstance();
+        this.articles= articlesModel.getArticles();
         mContext = context;
+        Log.e("pokemon", "SHA BANG1");
     }
 
     @Override
@@ -64,9 +65,11 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
         super.onDetachedFromRecyclerView(recyclerView);
     }
 
-    public void update(ArrayList<Article> addedArticles) {
-        articles.addAll(addedArticles);
+    public void update() {
+        articles = articlesModel.getArticles();
         notifyDataSetChanged();
+
+        Log.e("pokemon",articles.size()+"");
     }
 
     public int getCurrent_postion() {
@@ -107,7 +110,7 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
         @Override
         public void onClick(View v) {
             Intent i = new Intent(context, ArticleDetail.class);
-            i.putExtra("article", articles.get(getLayoutPosition()));
+            i.putExtra("article", getLayoutPosition());
             context.startActivity(i);
         }
     }

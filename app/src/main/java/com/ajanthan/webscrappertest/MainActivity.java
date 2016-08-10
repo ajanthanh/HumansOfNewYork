@@ -8,12 +8,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class MainActivity extends AppCompatActivity implements OnArticleScrapCompleted {
 
@@ -23,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements OnArticleScrapCom
 
     // URL Address
     private String url = "https://be1uo0y30d.execute-api.us-east-1.amazonaws.com/prod/data?limit=10&offset=";
-    private int page;
+    private ArticlesModel articlesModel;
     private boolean loadmore=false;
 
     ProgressDialog mProgressDialog;
@@ -36,17 +38,19 @@ public class MainActivity extends AppCompatActivity implements OnArticleScrapCom
         final ActionBar abar = getSupportActionBar();
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.actionbar_main);
-        ArrayList<Article> articles = new ArrayList<Article>();
+        articlesModel = ArticlesModel.getInstance();
 
-        page = 0;
         rArticlesList = (RecyclerView) findViewById(R.id.articleList);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        articleRecyclerViewAdapter = new ArticleRecyclerViewAdapter(this, articles);
+        articleRecyclerViewAdapter = new ArticleRecyclerViewAdapter(this);
         rArticlesList.setAdapter(articleRecyclerViewAdapter);
         rArticlesList.setLayoutManager(new LinearLayoutManager(this));
 
-        new JsonRequestArticle(articleRecyclerViewAdapter, url + page,this).execute();
-        page+=10;
+        if(articlesModel.getPageNumber()==0){
+            Log.e("pokemon","SHA BANG");
+            new JsonRequestArticle(articleRecyclerViewAdapter, url + articlesModel.getPageNumber(),this).execute();
+            articlesModel.setPageNumber(articlesModel.getPageNumber()+10);
+        }
 
         rArticlesList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -58,8 +62,8 @@ public class MainActivity extends AppCompatActivity implements OnArticleScrapCom
 
                 if(totalItemCount-2<firstVisibleItem&&loadmore==false){
                     loadmore=true;
-                    new JsonRequestArticle(articleRecyclerViewAdapter, url + page,MainActivity.this).execute();
-                    page+=10;
+                    new JsonRequestArticle(articleRecyclerViewAdapter, url + articlesModel.getPageNumber(),MainActivity.this).execute();
+                    articlesModel.setPageNumber(articlesModel.getPageNumber()+10);
                 }
             }
         });
@@ -74,18 +78,5 @@ public class MainActivity extends AppCompatActivity implements OnArticleScrapCom
     @Override
     protected void onResume() {
         super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        ArrayList<Article> articles = articleRecyclerViewAdapter.getArticles();
-
-        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor prefsEditor = mPrefs.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(articles);
-        prefsEditor.putString("articles", json);
-        prefsEditor.commit();
     }
 }

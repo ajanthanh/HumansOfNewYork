@@ -70,7 +70,9 @@ public class JsonRequestArticle extends AsyncTask<Void, Void, ArrayList<Article>
     @Override
     protected void onPostExecute(ArrayList<Article> articles) {
         super.onPostExecute(articles);
-        articleRecyclerViewAdapter.update(articles);
+        ArticlesModel articlesModel = ArticlesModel.getInstance();
+        articlesModel.addArticles(articles);
+        articleRecyclerViewAdapter.update();
         listener.onTaskCompleted();
     }
 

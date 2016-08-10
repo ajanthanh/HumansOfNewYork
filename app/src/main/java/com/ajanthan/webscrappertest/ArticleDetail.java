@@ -47,7 +47,7 @@ public class ArticleDetail extends AppCompatActivity {
         ivImage = (ImageView) findViewById(R.id.img);
         fabFavourite = (FloatingActionButton) findViewById(R.id.favouriteButton);
 
-        article = (Article)getIntent().getSerializableExtra(articleKey);
+        article = ArticlesModel.getInstance().getArticles().get((int)getIntent().getSerializableExtra(articleKey));
         tvDate.setText(article.getDate());
         tvBody.setText(article.getBody());
         Picasso.with(this)
