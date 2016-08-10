@@ -1,17 +1,13 @@
 package com.ajanthan.webscrappertest;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.WindowCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Window;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,6 +26,7 @@ public class ArticleDetail extends AppCompatActivity {
     private TextView tvDate;
     private TextView tvBody;
     private ImageView ivImage;
+    private FloatingActionButton fabFavourite;
 
     private Article article;
 
@@ -48,6 +45,7 @@ public class ArticleDetail extends AppCompatActivity {
         tvDate = (TextView) findViewById(R.id.date);
         tvBody = (TextView) findViewById(R.id.body);
         ivImage = (ImageView) findViewById(R.id.img);
+        fabFavourite = (FloatingActionButton) findViewById(R.id.favouriteButton);
 
         article = (Article)getIntent().getSerializableExtra(articleKey);
         tvDate.setText(article.getDate());
@@ -55,6 +53,14 @@ public class ArticleDetail extends AppCompatActivity {
         Picasso.with(this)
                 .load(article.getImgUrl())
                 .into(ivImage);
+        setFavouriteIcon();
+        fabFavourite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                article.setIsFavourite(!article.getIsFavourite());
+                setFavouriteIcon();
+            }
+        });
     }
 
     private void requestFeature() {
@@ -75,6 +81,15 @@ public class ArticleDetail extends AppCompatActivity {
             e.printStackTrace();
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void setFavouriteIcon(){
+        //must be version greater than lollipop in order for the favourite icons to toggle as below
+        if(article.getIsFavourite()){
+            fabFavourite.setImageDrawable(getDrawable(R.drawable.ic_favorite_border_white_24dp));
+        }else{
+            fabFavourite.setImageDrawable(getDrawable(R.drawable.ic_favorite_white_24dp));
         }
     }
 }
