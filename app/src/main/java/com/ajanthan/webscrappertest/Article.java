@@ -1,7 +1,5 @@
 package com.ajanthan.webscrappertest;
 
-import android.graphics.Bitmap;
-
 import java.io.Serializable;
 
 /**
@@ -12,12 +10,14 @@ public class Article implements Serializable {
     private String date;
     private String body;
     private String imgUrl;
+    private Boolean isFavourite;
 
     Article(String title, String date, String body, String imgUrl) {
         this.title = title;
         this.date = date;
         this.body= body.trim();
         this.imgUrl = imgUrl;
+        this.isFavourite = false;
     }
 
     public String getTitle() {
@@ -52,4 +52,11 @@ public class Article implements Serializable {
         this.imgUrl = imgUrl;
     }
 
+    public Boolean getIsFavourite() {
+        return isFavourite;
+    }
+
+    public void setIsFavourite(Boolean isFavourite) {
+        this.isFavourite = isFavourite;
+    }
 }

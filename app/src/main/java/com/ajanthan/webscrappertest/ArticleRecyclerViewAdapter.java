@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.squareup.picasso.Picasso;
 
@@ -46,6 +47,7 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
     public void onBindViewHolder(ArticleViewHolder holder, int position) {
         holder.tvArticleDescription.setText(articles.get(position).getBody());
         holder.tvDate.setText(articles.get(position).getDate());
+        holder.tbFavourite.setChecked(articles.get(position).getIsFavourite());
         Picasso.with(mContext)
                 .load(articles.get(position).getImgUrl())
                 .into(holder.ivImage);
@@ -80,6 +82,7 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
         private TextView tvArticleDescription;
         private TextView tvDate;
         private ImageView ivImage;
+        private ToggleButton tbFavourite;
         private Context context;
         private SharedPreferences prefs;
 
@@ -88,15 +91,23 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
             tvArticleDescription = (TextView) itemView.findViewById(R.id.description);
             tvDate = (TextView) itemView.findViewById(R.id.date);
             ivImage = (ImageView) itemView.findViewById(R.id.logo);
+            tbFavourite = (ToggleButton) itemView.findViewById(R.id.favouriteButton);
             this.context = context;
             prefs = context.getSharedPreferences("article", Context.MODE_PRIVATE);
             itemView.setOnClickListener(this);
+
+            tbFavourite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    articles.get(getLayoutPosition()).setIsFavourite(tbFavourite.isChecked());
+                }
+            });
         }
 
         @Override
         public void onClick(View v) {
             Intent i = new Intent(context, ArticleDetail.class);
-            i.putExtra("article", articles.get(this.getLayoutPosition()));
+            i.putExtra("article", articles.get(getLayoutPosition()));
             context.startActivity(i);
         }
     }
