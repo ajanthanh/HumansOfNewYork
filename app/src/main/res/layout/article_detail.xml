@@ -21,17 +21,6 @@
                 android:paddingBottom="10dp"
                 android:scaleType="centerCrop" />
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/favouriteButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="-25dp"
-                android:src="@drawable/favourite_button"
-                android:layout_above="@id/title"
-                android:layout_alignParentRight="true">
-            </android.support.design.widget.FloatingActionButton>
-
                 <TextView
                     android:id="@+id/title"
                     android:layout_width="match_parent"
