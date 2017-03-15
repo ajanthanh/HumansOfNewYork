@@ -48,8 +48,6 @@ public class JsonRequestArticle extends AsyncTask<Void, Void, ArrayList<Article>
             for (int i = 0; i < posts.length(); i++) {
                 JSONObject jo = posts.getJSONObject(i);
                 String image = jo.getJSONArray("photos").getJSONObject(0).getJSONArray("alt_sizes").getJSONObject(0).getString("url");
-//                Log.e("pokemon","caption : " +parseBody(jo.getString("caption")));
-                Log.e("pokemon","image : " +image);
                 articles.add(new Article(jo.getString("slug"),
                         jo.getString("date"),
                         parseBody(jo.getString("caption")),
@@ -85,8 +83,11 @@ public class JsonRequestArticle extends AsyncTask<Void, Void, ArrayList<Article>
         body = body.replace("&ldquo;","\"");
         body = body.replace("&rdquo;","\"");
         body = body.replace("&rsquo;","'");
+        
+        //Bug fix: remove links surrounded by <a> tags in body
+        body = body.replaceAll("<a.*?</a>", "");
         body = body.trim();
-        Log.e("pokemon",body.charAt(0)+"");
+        Log.e("pokemon2",body);
         return body;
     }
 }
