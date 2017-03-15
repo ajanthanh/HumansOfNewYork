@@ -83,6 +83,7 @@ public class JsonRequestArticle extends AsyncTask<Void, Void, ArrayList<Article>
         body = body.replace("&ldquo;","\"");
         body = body.replace("&rdquo;","\"");
         body = body.replace("&rsquo;","'");
+        body = body.replace("(&frac12;)","'");
         
         //Bug fix: remove links surrounded by <a> tags in body
         body = body.replaceAll("<a.*?</a>", "");
